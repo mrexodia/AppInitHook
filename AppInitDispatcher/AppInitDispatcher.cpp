@@ -53,7 +53,11 @@ BOOL WINAPI DllMain(
 			}
 			*p = L'\0';
 		}
-		wcsncat_s(szIniPath, L"\\AppInitHook.ini", _TRUNCATE);
+#ifdef _WIN64
+		wcsncat_s(szIniPath, L"\\AppInitHook_x64.ini", _TRUNCATE);
+#else
+		wcsncat_s(szIniPath, L"\\AppInitHook_x86.ini", _TRUNCATE);
+#endif //_WIN64
 		dlogp("Settings: '%S'", szIniPath);
 
 		std::string processName;
@@ -71,7 +75,6 @@ BOOL WINAPI DllMain(
 				ch = tolower(ch);
 		}
 		dlogp("Process: '%s'", processName.c_str());
-		
 
 		Utf8Ini ini;
 		auto hFile = CreateFileW(szIniPath, GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, 0, nullptr);
