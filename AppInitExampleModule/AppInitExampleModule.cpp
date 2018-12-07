@@ -5,7 +5,7 @@
 
 decltype(&SetCurrentDirectoryW) original_SetCurrentDirectoryW;
 
-static BOOL hook_SetCurrentDirectoryW(__in LPCWSTR lpPathName)
+static BOOL WINAPI hook_SetCurrentDirectoryW(__in LPCWSTR lpPathName)
 {
 	dlogp("'%S'", lpPathName);
 	return original_SetCurrentDirectoryW(lpPathName);
