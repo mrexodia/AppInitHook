@@ -1,0 +1,12 @@
+Debug/
+Release/
+Win32/
+x64/
+*.vcxproj.user
+*.opensdf
+*.sdf
+*.suo
+*.VC.db
+*.VC.opendb
+ipch/
+.vs/
