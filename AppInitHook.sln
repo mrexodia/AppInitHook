@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AppInitDispatcher", "AppIni
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AppInitExampleModule", "AppInitExampleModule\AppInitExampleModule.vcxproj", "{896EEC80-9CF5-4404-81D7-8318AA531A6B}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ConhostLoader", "ConhostLoader\ConhostLoader.vcxproj", "{D2D02670-FEE0-4F94-A88D-188CAC01DA5C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -51,6 +53,14 @@ Global
 		{896EEC80-9CF5-4404-81D7-8318AA531A6B}.Release|Win32.Build.0 = Release|Win32
 		{896EEC80-9CF5-4404-81D7-8318AA531A6B}.Release|x64.ActiveCfg = Release|x64
 		{896EEC80-9CF5-4404-81D7-8318AA531A6B}.Release|x64.Build.0 = Release|x64
+		{D2D02670-FEE0-4F94-A88D-188CAC01DA5C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D2D02670-FEE0-4F94-A88D-188CAC01DA5C}.Debug|Win32.Build.0 = Debug|Win32
+		{D2D02670-FEE0-4F94-A88D-188CAC01DA5C}.Debug|x64.ActiveCfg = Debug|x64
+		{D2D02670-FEE0-4F94-A88D-188CAC01DA5C}.Debug|x64.Build.0 = Debug|x64
+		{D2D02670-FEE0-4F94-A88D-188CAC01DA5C}.Release|Win32.ActiveCfg = Release|Win32
+		{D2D02670-FEE0-4F94-A88D-188CAC01DA5C}.Release|Win32.Build.0 = Release|Win32
+		{D2D02670-FEE0-4F94-A88D-188CAC01DA5C}.Release|x64.ActiveCfg = Release|x64
+		{D2D02670-FEE0-4F94-A88D-188CAC01DA5C}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
