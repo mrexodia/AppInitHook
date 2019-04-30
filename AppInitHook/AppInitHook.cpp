@@ -8,7 +8,7 @@ BOOL WINAPI DllMain(
 {
 	if (fdwReason == DLL_PROCESS_ATTACH)
 	{
-		OutputDebugStringA("[AppInitHook] The bomb has been planted!");
+		OutputDebugStringA("[AppInitHook] The bomb has been planted!\n");
 #ifdef _WIN64
 		LoadLibraryW(L"AppInitDispatcher_x64.dll");
 #else

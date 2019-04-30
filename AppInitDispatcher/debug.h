@@ -20,6 +20,7 @@ void dprintf(const char* format, ...)
 		else
 			break;
 	}
+	dprintf_msg[strlen(dprintf_msg)] = '\n';
 	OutputDebugStringA(dprintf_msg);
 }
 
