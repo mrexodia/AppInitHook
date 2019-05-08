@@ -81,4 +81,12 @@
       <Filter>Header Files\MinHook\hde</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Library Include="ntdll\ntdll_x64.lib">
+      <Filter>Header Files\ntdll</Filter>
+    </Library>
+    <Library Include="ntdll\ntdll_x86.lib">
+      <Filter>Header Files\ntdll</Filter>
+    </Library>
+  </ItemGroup>
 </Project>
