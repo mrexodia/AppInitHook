@@ -2,7 +2,7 @@
 #include "debug.h"
 #include "MinHook/MinHook.h"
 
-static bool proxyEnabled = false;
+static bool proxyEnabled = true;
 
 static CURLcode hook_Curl_vsetopt(CURL* curl, CURLoption option, va_list arg);
 static CURLcode hook_curl_easy_getinfo(CURL *curl, CURLINFO info, void* p);
@@ -233,7 +233,7 @@ static HANDLE WINAPI hook_CreateFileW(
 {
 	if(proxyEnabled && lpFileName)
 	{
-		if(wcsstr(lpFileName, L"\\CACERT_NINTENDO_CA_G3.der") || wcsstr(lpFileName, L"\\CACERT_NINTENDO_CLASS2_CA_G3.der"))
+		if(wcsstr(lpFileName, L"\\CACERT_NINTENDO_") || wcsstr(lpFileName, L"/CACERT_NINTENDO_"))
 		{
 			std::wstring proxyFilename = lpFileName;
 			proxyFilename += L".proxy";
