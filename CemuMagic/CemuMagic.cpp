@@ -37,7 +37,7 @@ static ULONG_PTR checkModule()
     auto pnth = (PIMAGE_NT_HEADERS)((char*)hMod + pdh->e_lfanew);
     if(pnth->Signature != IMAGE_NT_SIGNATURE)
         return 0;
-    if(pnth->FileHeader.TimeDateStamp != 0x5C817946)
+    if(pnth->FileHeader.TimeDateStamp != 0x5CFA5F15)
         return 0;
     return ULONG_PTR(hMod);
 }
@@ -263,22 +263,22 @@ BOOL WINAPI DllMain(
 			dlogp("MH_Initialize failed");
 			return FALSE;
 		}
-        if(MH_CreateHookRva(0x368680, hook_Curl_vsetopt, original_Curl_vsetopt) != MH_OK)
+        if(MH_CreateHookRva(0x3AE5C0, hook_Curl_vsetopt, original_Curl_vsetopt) != MH_OK)
 		{
 			dlogp("MH_CreateHook failed (Curl_vsetopt)");
 			return FALSE;
 		}
-        if(MH_CreateHookRva(0x368040, hook_curl_easy_init, original_curl_easy_init) != MH_OK)
+        if(MH_CreateHookRva(0x3ADF80, hook_curl_easy_init, original_curl_easy_init) != MH_OK)
         {
             dlogp("MH_CreateHook failed (curl_easy_init)");
             return FALSE;
         }
-        if(MH_CreateHookRva(0x368000, hook_curl_easy_cleanup, original_curl_easy_cleanup) != MH_OK)
+        if(MH_CreateHookRva(0x3ADF40, hook_curl_easy_cleanup, original_curl_easy_cleanup) != MH_OK)
         {
             dlogp("MH_CreateHook failed (curl_easy_cleanup)");
             return FALSE;
         }
-        if(MH_CreateHookRva(0x368010, hook_curl_easy_getinfo, original_curl_easy_getinfo) != MH_OK)
+        if(MH_CreateHookRva(0x3ADF50, hook_curl_easy_getinfo, original_curl_easy_getinfo) != MH_OK)
         {
             dlogp("MH_CreateHook failed (curl_easy_getinfo)");
             return FALSE;
