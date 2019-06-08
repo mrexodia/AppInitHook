@@ -33,6 +33,27 @@ static std::wstring Utf8ToUtf16(const char* str)
 	return convertedString;
 }
 
+static DWORD getModuleTimeDateStamp(HMODULE hMod)
+{
+	DWORD TimeDateStamp = 0;
+	__try
+	{
+		if(!hMod)
+			return 0;
+		auto pdh = (PIMAGE_DOS_HEADER)hMod;
+		if(pdh->e_magic != IMAGE_DOS_SIGNATURE)
+			return 0;
+		auto pnth = (PIMAGE_NT_HEADERS)((char*)hMod + pdh->e_lfanew);
+		if(pnth->Signature != IMAGE_NT_SIGNATURE)
+			return 0;
+		TimeDateStamp = pnth->FileHeader.TimeDateStamp;
+	}
+	__except(EXCEPTION_EXECUTE_HANDLER)
+	{
+	}
+	return TimeDateStamp;
+}
+
 BOOL WINAPI DllMain(
 	_In_ HINSTANCE hinstDLL,
 	_In_ DWORD     fdwReason,
@@ -60,10 +81,12 @@ BOOL WINAPI DllMain(
 #endif //_WIN64
 		dlogp("Settings: '%S'", szIniPath);
 
+		auto hMod = GetModuleHandleW(nullptr);
+
 		std::string processName;
 		{
 			wchar_t szProcessPath[MAX_PATH] = L"";
-			GetModuleFileNameW(GetModuleHandleW(nullptr), szProcessPath, _countof(szProcessPath));
+			GetModuleFileNameW(hMod, szProcessPath, _countof(szProcessPath));
 			auto p = wcsrchr(szProcessPath, L'\\');
 			if (!p)
 			{
@@ -107,7 +130,17 @@ BOOL WINAPI DllMain(
 		{
 			dlogp("Failed to open settings");
 		}
-		auto dllToLoad = Utf8ToUtf16(ini.GetValue(processName, "Module").c_str());
+		auto dllToLoadUtf8 = ini.GetValue(processName, "Module");
+		if(dllToLoadUtf8.empty())
+		{
+			DWORD TimeDateStamp = getModuleTimeDateStamp(hMod);
+			char timeDateStampText[16] = "";
+			sprintf_s(timeDateStampText, "%08X", TimeDateStamp);
+			dllToLoadUtf8 = ini.GetValue(processName + ":" + timeDateStampText, "Module");
+			if(!dllToLoadUtf8.empty())
+				dlogp("Found module with DateTimeStamp %s", timeDateStampText);
+		}
+		auto dllToLoad = Utf8ToUtf16(dllToLoadUtf8.c_str());
 		if (!dllToLoad.empty())
 		{
 			dlogp("dllToLoad: '%S'", dllToLoad.c_str());

@@ -2,7 +2,7 @@
 #include "debug.h"
 #include "MinHook/MinHook.h"
 
-static bool proxyEnabled = true;
+static bool proxyEnabled = false;
 
 static CURLcode hook_Curl_vsetopt(CURL* curl, CURLoption option, va_list arg);
 static CURLcode hook_curl_easy_getinfo(CURL *curl, CURLINFO info, void* p);
@@ -292,6 +292,16 @@ BOOL WINAPI DllMain(
 		{
 			dlogp("MH_EnableHook failed");
 			return FALSE;
+		}
+		if(GetAsyncKeyState(VK_CONTROL))
+		{
+			dlogp("Proxy enabled!");
+			proxyEnabled = true;
+		}
+		else
+		{
+			dlogp("Proxy disabled!");
+			proxyEnabled = false;
 		}
         dlogp("Done!");
 	}
