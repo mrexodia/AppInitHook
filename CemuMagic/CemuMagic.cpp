@@ -2,6 +2,8 @@
 #include "debug.h"
 #include "MinHook/MinHook.h"
 
+extern "C" void __declspec(dllexport) inject() { }
+
 static bool proxyEnabled = false;
 
 static CURLcode hook_Curl_vsetopt(CURL* curl, CURLoption option, va_list arg);
