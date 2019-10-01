@@ -6,18 +6,6 @@
 
 static decltype(&NtQueryValueKey) original_NtQueryValueKey;
 
-static std::wstring safeUnicodeString(PUNICODE_STRING Str)
-{
-	std::wstring result;
-	if (Str && Str->Buffer)
-	{
-		result.resize(Str->Length / 2);
-		for (size_t i = 0; i < result.length(); i++)
-			result[i] = Str->Buffer[i];
-	}
-	return result;
-}
-
 static NTSTATUS NTAPI hook_NtQueryValueKey(
 	_In_ HANDLE KeyHandle,
 	_In_ PUNICODE_STRING ValueName,
@@ -27,16 +15,21 @@ static NTSTATUS NTAPI hook_NtQueryValueKey(
 	_Out_ PULONG ResultLength
 	)
 {
-	auto safeValueName = safeUnicodeString(ValueName);
-	if (safeValueName == L"Debugger")
+	__try
 	{
-		UNICODE_STRING ValueNameMagic;
-		ValueNameMagic.Buffer = L"DebuggerMagic";
-		ValueNameMagic.Length = (USHORT)wcslen(ValueNameMagic.Buffer) * 2;
-		ValueNameMagic.MaximumLength = ValueNameMagic.Length + 2;
-		auto magicStatus = original_NtQueryValueKey(KeyHandle, &ValueNameMagic, KeyValueInformationClass, KeyValueInformation, Length, ResultLength);
-		if (NT_SUCCESS(magicStatus))
-			return magicStatus;
+		UNICODE_STRING DebuggerStr;
+		RtlInitUnicodeString(&DebuggerStr, L"Debugger");
+		if (RtlCompareUnicodeString(&DebuggerStr, ValueName, TRUE) == 0)
+		{
+			UNICODE_STRING ValueNameMagic;
+			RtlInitUnicodeString(&ValueNameMagic, L"DebuggerMagic");
+			auto magicStatus = original_NtQueryValueKey(KeyHandle, &ValueNameMagic, KeyValueInformationClass, KeyValueInformation, Length, ResultLength);
+			if (NT_SUCCESS(magicStatus))
+				return magicStatus;
+		}
+	}
+	__except (EXCEPTION_EXECUTE_HANDLER)
+	{
 	}
 	return original_NtQueryValueKey(KeyHandle, ValueName, KeyValueInformationClass, KeyValueInformation, Length, ResultLength);
 }
