@@ -235,12 +235,15 @@ static HANDLE WINAPI hook_CreateFileW(
 {
 	if(proxyEnabled && lpFileName)
 	{
-		if(wcsstr(lpFileName, L"\\CACERT_NINTENDO_") || wcsstr(lpFileName, L"/CACERT_NINTENDO_"))
+		if(wcsstr(lpFileName, L"\\CACERT_NINTENDO_") || wcsstr(lpFileName, L"/CACERT_NINTENDO_") || wcsstr(lpFileName, L"/seeprom.bin") || wcsstr(lpFileName, L"/otp.bin") || wcsstr(lpFileName, L"account.dat"))
 		{
 			std::wstring proxyFilename = lpFileName;
 			proxyFilename += L".proxy";
 			dlogp("%S -> %S", lpFileName, proxyFilename.c_str());
-			return original_CreateFileW(proxyFilename.c_str(), dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
+			auto hFile = original_CreateFileW(proxyFilename.c_str(), dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
+			if (hFile == INVALID_HANDLE_VALUE)
+				dlogp("not found: %S", proxyFilename.c_str());
+			return hFile;
 		}
 	}
 	return original_CreateFileW(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);

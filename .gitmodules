@@ -1,0 +1,3 @@
+[submodule "Pretendo"]
+	path = Pretendo
+	url = https://github.com/SmmServer/CemuHook
