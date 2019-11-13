@@ -3,6 +3,8 @@
 #include "debug.h"
 #include "MinHook/MinHook.h"
 
+extern "C" __declspec(dllexport) void inject() { }
+
 decltype(&SetCurrentDirectoryW) original_SetCurrentDirectoryW;
 
 static BOOL WINAPI hook_SetCurrentDirectoryW(__in LPCWSTR lpPathName)
