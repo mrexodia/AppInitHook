@@ -168,6 +168,60 @@ target_link_libraries(ExitProcess PUBLIC
 
 unset(CMKR_TARGET)
 unset(CMKR_SOURCES)
+# Target ForceQuit
+set(CMKR_TARGET ForceQuit)
+set(ForceQuit_SOURCES "")
+
+list(APPEND ForceQuit_SOURCES
+	"ForceQuit/ForceQuit.cpp"
+)
+
+list(APPEND ForceQuit_SOURCES
+	cmake.toml
+)
+
+set(CMKR_SOURCES ${ForceQuit_SOURCES})
+add_library(ForceQuit SHARED)
+
+if(ForceQuit_SOURCES)
+	target_sources(ForceQuit PRIVATE ${ForceQuit_SOURCES})
+endif()
+
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${ForceQuit_SOURCES})
+
+target_link_libraries(ForceQuit PUBLIC
+	HookDll
+)
+
+unset(CMKR_TARGET)
+unset(CMKR_SOURCES)
+# Target GitMagic
+set(CMKR_TARGET GitMagic)
+set(GitMagic_SOURCES "")
+
+list(APPEND GitMagic_SOURCES
+	"GitMagic/GitMagic.cpp"
+)
+
+list(APPEND GitMagic_SOURCES
+	cmake.toml
+)
+
+set(CMKR_SOURCES ${GitMagic_SOURCES})
+add_library(GitMagic SHARED)
+
+if(GitMagic_SOURCES)
+	target_sources(GitMagic PRIVATE ${GitMagic_SOURCES})
+endif()
+
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${GitMagic_SOURCES})
+
+target_link_libraries(GitMagic PUBLIC
+	HookDll
+)
+
+unset(CMKR_TARGET)
+unset(CMKR_SOURCES)
 # Target HighPriority
 set(CMKR_TARGET HighPriority)
 set(HighPriority_SOURCES "")
@@ -190,6 +244,60 @@ endif()
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${HighPriority_SOURCES})
 
 target_link_libraries(HighPriority PUBLIC
+	HookDll
+)
+
+unset(CMKR_TARGET)
+unset(CMKR_SOURCES)
+# Target NoSoftwareInventory
+set(CMKR_TARGET NoSoftwareInventory)
+set(NoSoftwareInventory_SOURCES "")
+
+list(APPEND NoSoftwareInventory_SOURCES
+	"NoSoftwareInventory/NoSoftwareInventory.cpp"
+)
+
+list(APPEND NoSoftwareInventory_SOURCES
+	cmake.toml
+)
+
+set(CMKR_SOURCES ${NoSoftwareInventory_SOURCES})
+add_library(NoSoftwareInventory SHARED)
+
+if(NoSoftwareInventory_SOURCES)
+	target_sources(NoSoftwareInventory PRIVATE ${NoSoftwareInventory_SOURCES})
+endif()
+
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${NoSoftwareInventory_SOURCES})
+
+target_link_libraries(NoSoftwareInventory PUBLIC
+	HookDll
+)
+
+unset(CMKR_TARGET)
+unset(CMKR_SOURCES)
+# Target TotalCommander
+set(CMKR_TARGET TotalCommander)
+set(TotalCommander_SOURCES "")
+
+list(APPEND TotalCommander_SOURCES
+	"TotalCommander/TotalCommander.cpp"
+)
+
+list(APPEND TotalCommander_SOURCES
+	cmake.toml
+)
+
+set(CMKR_SOURCES ${TotalCommander_SOURCES})
+add_library(TotalCommander SHARED)
+
+if(TotalCommander_SOURCES)
+	target_sources(TotalCommander PRIVATE ${TotalCommander_SOURCES})
+endif()
+
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${TotalCommander_SOURCES})
+
+target_link_libraries(TotalCommander PUBLIC
 	HookDll
 )
 

@@ -28,9 +28,29 @@ type = "shared"
 sources = ["ExitProcess/*.cpp", "ExitProcess/*.h"]
 link-libraries = ["HookDll"]
 
+[target.ForceQuit]
+type = "shared"
+sources = ["ForceQuit/*.cpp", "ForceQuit/*.h"]
+link-libraries = ["HookDll"]
+
+[target.GitMagic]
+type = "shared"
+sources = ["GitMagic/*.cpp", "GitMagic/*.h"]
+link-libraries = ["HookDll"]
+
 [target.HighPriority]
 type = "shared"
 sources = ["HighPriority/*.cpp", "HighPriority/*.h"]
+link-libraries = ["HookDll"]
+
+[target.NoSoftwareInventory]
+type = "shared"
+sources = ["NoSoftwareInventory/*.cpp", "NoSoftwareInventory/*.h"]
+link-libraries = ["HookDll"]
+
+[target.TotalCommander]
+type = "shared"
+sources = ["TotalCommander/*.cpp", "TotalCommander/*.h"]
 link-libraries = ["HookDll"]
 
 [target.WerfaultMagic]
