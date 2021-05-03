@@ -1,12 +1,10 @@
-Debug/
-Release/
-Win32/
-x64/
-*.vcxproj.user
-*.opensdf
-*.sdf
-*.suo
-*.VC.db
-*.VC.opendb
-ipch/
+# CMake/IDE artifacts
+build*/
+.idea/
 .vs/
+cmake-build-*/
+/CMakeSettings.json
+CMakeLists.txt.user
+
+# Don't push private modules
+/Private/

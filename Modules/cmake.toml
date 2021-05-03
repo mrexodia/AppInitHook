@@ -1,0 +1,44 @@
+[target.AppInitExampleModule]
+type = "shared"
+sources = ["AppInitExampleModule/*.cpp", "AppInitExampleModule/*.h"]
+link-libraries = ["HookDll"]
+
+[target.clang-cl-hacks]
+type = "shared"
+sources = ["clang-cl-hacks/*.cpp", "clang-cl-hacks/*.h"]
+link-libraries = ["HookDll"]
+
+[target.CMakeClean]
+type = "shared"
+sources = ["CMakeClean/*.cpp", "CMakeClean/*.h"]
+link-libraries = ["HookDll"]
+
+[target.CmdImproved]
+type = "shared"
+sources = ["CmdImproved/*.cpp", "CmdImproved/*.h"]
+link-libraries = ["HookDll"]
+
+[target.ConhostLoader]
+type = "shared"
+sources = ["ConhostLoader/*.cpp", "ConhostLoader/*.h"]
+link-libraries = ["HookDll"]
+
+[target.ExitProcess]
+type = "shared"
+sources = ["ExitProcess/*.cpp", "ExitProcess/*.h"]
+link-libraries = ["HookDll"]
+
+[target.HighPriority]
+type = "shared"
+sources = ["HighPriority/*.cpp", "HighPriority/*.h"]
+link-libraries = ["HookDll"]
+
+[target.WerfaultMagic]
+type = "shared"
+sources = ["WerfaultMagic/*.cpp", "WerfaultMagic/*.h"]
+link-libraries = ["HookDll"]
+
+[target.WowUndirect]
+type = "shared"
+sources = ["WowUndirect/*.cpp", "WowUndirect/*.h"]
+link-libraries = ["HookDll"]

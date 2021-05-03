@@ -1,0 +1,40 @@
+[conditions]
+x86 = "CMAKE_SIZEOF_VOID_P EQUAL 4"
+x64 = "CMAKE_SIZEOF_VOID_P EQUAL 8"
+
+[target.ntdll]
+type = "interface"
+include-directories = ["${CMAKE_CURRENT_SOURCE_DIR}"]
+link-directories = ["ntdll"]
+x86.link-libraries = ["ntdll_x86"]
+x64.link-libraries = ["ntdll_x64"]
+
+[target.MinHook]
+type = "static"
+sources = ["MinHook/**.c", "MinHook/**.h"]
+include-directories = ["${CMAKE_CURRENT_SOURCE_DIR}"]
+
+[target.DebugHelper]
+type = "interface"
+include-directories = ["DebugHelper"]
+
+[target.HookDll]
+type = "interface"
+link-libraries = ["ntdll", "MinHook", "DebugHelper"]
+
+[target.AppInitDispatcher]
+type = "shared"
+sources = ["AppInitDispatcher/*.cpp", "AppInitDispatcher/*.h"]
+link-libraries = ["DebugHelper"]
+cmake-after = """
+# TODO: this doesn't actually do anything yet
+add_custom_target(register_AppInitDLL
+    COMMAND
+        echo \"$<TARGET_FILE:AppInitDispatcher>\"
+    SOURCES
+        AppInitDispatcher/install_x86.reg
+        AppInitDispatcher/install_x64.reg
+    DEPENDS
+        AppInitDispatcher
+)
+"""
