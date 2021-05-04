@@ -27,10 +27,6 @@ endif()
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${AppInitExampleModule_SOURCES})
 
-target_compile_definitions(AppInitExampleModule PUBLIC
-	"MODULENAME=\"${CMKR_TARGET}\""
-)
-
 target_link_libraries(AppInitExampleModule PUBLIC
 	HookDll
 )
@@ -57,10 +53,6 @@ if(clang-cl-hacks_SOURCES)
 endif()
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${clang-cl-hacks_SOURCES})
-
-target_compile_definitions(clang-cl-hacks PUBLIC
-	"MODULENAME=\"${CMKR_TARGET}\""
-)
 
 target_link_libraries(clang-cl-hacks PUBLIC
 	HookDll
@@ -89,10 +81,6 @@ endif()
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${CMakeClean_SOURCES})
 
-target_compile_definitions(CMakeClean PUBLIC
-	"MODULENAME=\"${CMKR_TARGET}\""
-)
-
 target_link_libraries(CMakeClean PUBLIC
 	HookDll
 )
@@ -119,10 +107,6 @@ if(CmdImproved_SOURCES)
 endif()
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${CmdImproved_SOURCES})
-
-target_compile_definitions(CmdImproved PUBLIC
-	"MODULENAME=\"${CMKR_TARGET}\""
-)
 
 target_link_libraries(CmdImproved PUBLIC
 	HookDll
@@ -151,10 +135,6 @@ endif()
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${ConhostLoader_SOURCES})
 
-target_compile_definitions(ConhostLoader PUBLIC
-	"MODULENAME=\"${CMKR_TARGET}\""
-)
-
 target_link_libraries(ConhostLoader PUBLIC
 	HookDll
 )
@@ -181,10 +161,6 @@ if(ExitProcess_SOURCES)
 endif()
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${ExitProcess_SOURCES})
-
-target_compile_definitions(ExitProcess PUBLIC
-	"MODULENAME=\"${CMKR_TARGET}\""
-)
 
 target_link_libraries(ExitProcess PUBLIC
 	HookDll
@@ -213,10 +189,6 @@ endif()
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${ForceQuit_SOURCES})
 
-target_compile_definitions(ForceQuit PUBLIC
-	"MODULENAME=\"${CMKR_TARGET}\""
-)
-
 target_link_libraries(ForceQuit PUBLIC
 	HookDll
 )
@@ -243,10 +215,6 @@ if(GitMagic_SOURCES)
 endif()
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${GitMagic_SOURCES})
-
-target_compile_definitions(GitMagic PUBLIC
-	"MODULENAME=\"${CMKR_TARGET}\""
-)
 
 target_link_libraries(GitMagic PUBLIC
 	HookDll
@@ -275,10 +243,6 @@ endif()
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${HighPriority_SOURCES})
 
-target_compile_definitions(HighPriority PUBLIC
-	"MODULENAME=\"${CMKR_TARGET}\""
-)
-
 target_link_libraries(HighPriority PUBLIC
 	HookDll
 )
@@ -305,10 +269,6 @@ if(NoSoftwareInventory_SOURCES)
 endif()
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${NoSoftwareInventory_SOURCES})
-
-target_compile_definitions(NoSoftwareInventory PUBLIC
-	"MODULENAME=\"${CMKR_TARGET}\""
-)
 
 target_link_libraries(NoSoftwareInventory PUBLIC
 	HookDll
@@ -337,10 +297,6 @@ endif()
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${TotalCommander_SOURCES})
 
-target_compile_definitions(TotalCommander PUBLIC
-	"MODULENAME=\"${CMKR_TARGET}\""
-)
-
 target_link_libraries(TotalCommander PUBLIC
 	HookDll
 )
@@ -368,10 +324,6 @@ endif()
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${WerfaultMagic_SOURCES})
 
-target_compile_definitions(WerfaultMagic PUBLIC
-	"MODULENAME=\"${CMKR_TARGET}\""
-)
-
 target_link_libraries(WerfaultMagic PUBLIC
 	HookDll
 )
@@ -398,10 +350,6 @@ if(WowUndirect_SOURCES)
 endif()
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${WowUndirect_SOURCES})
-
-target_compile_definitions(WowUndirect PUBLIC
-	"MODULENAME=\"${CMKR_TARGET}\""
-)
 
 target_link_libraries(WowUndirect PUBLIC
 	HookDll

@@ -1,4 +1,3 @@
-#define MODULENAME "HookDll"
 #include "HookDll.hpp"
 
 #include <cstdarg>
@@ -8,10 +7,10 @@
 // Empty export to allow adding this DLL to the IAT
 extern "C" __declspec(dllexport) void inject() { }
 
-static char dprintf_msg[66000];
 
 void dprintf(const char* format, ...)
 {
+	static char dprintf_msg[66000];
 	va_list args;
 	va_start(args, format);
 	*dprintf_msg = 0;
@@ -32,17 +31,14 @@ void dputs(const char* text)
 	dprintf("%s\n", text);
 }
 
-// Call this from your DllMain to use the HOOK macros
-BOOL WINAPI HookDllMain(
-	_In_ HINSTANCE hinstDLL,
-	_In_ DWORD     fdwReason,
-	_In_ LPVOID    lpvReserved
-)
+extern "C" IMAGE_DOS_HEADER __ImageBase;
+
+const char* modname()
 {
-	if (fdwReason == DLL_PROCESS_ATTACH)
+	static char szModuleName[MAX_PATH];
+	if (*szModuleName == '\0')
 	{
-		char szModuleName[MAX_PATH] = "";
-		GetModuleFileNameA(hinstDLL, szModuleName, _countof(szModuleName));
+		GetModuleFileNameA((HMODULE)&__ImageBase, szModuleName, _countof(szModuleName));
 		auto backslash = strrchr(szModuleName, '\\');
 		if (backslash)
 		{
@@ -54,13 +50,23 @@ BOOL WINAPI HookDllMain(
 				*period = L'\0';
 			}
 		}
+	}
+	return szModuleName;
+}
+
+// Call this from your DllMain to use the HOOK macros
+BOOL WINAPI HookDllMain(
+	_In_ HINSTANCE hinstDLL,
+	_In_ DWORD     fdwReason,
+	_In_ LPVOID    lpvReserved
+)
+{
+	if (fdwReason == DLL_PROCESS_ATTACH)
+	{
 		auto initStatus = MH_Initialize();
 		if (initStatus != MH_OK)
 		{
-			dprintf("[AppInitHook] [%s] MH_Initialize failed, status: %s",
-				szModuleName,
-				MH_StatusToString(initStatus)
-			);
+			dlogp("MH_Initialize failed, status: %s", MH_StatusToString(initStatus));
 			return FALSE;
 		}
 		int hooksInstalled = 0;
@@ -69,21 +75,12 @@ BOOL WINAPI HookDllMain(
 			auto hookStatus = MH_CreateHookApi(hook->pszModule, hook->pszProcName, hook->pDetour, hook->ppOriginal);
 			if (hookStatus != MH_OK)
 			{
-				dprintf("[AppInitHook] [%s] Failed to hook %S:%s, status: %s",
-					szModuleName,
-					hook->pszModule,
-					hook->pszProcName,
-					MH_StatusToString(hookStatus)
-				);
+				dlogp("Failed to hook %S:%s, status: %s", hook->pszModule, hook->pszProcName, MH_StatusToString(hookStatus));
 				return FALSE;
 			}
 			else
 			{
-				dprintf("[AppInitHook] [%s] Hooked %S:%s",
-					szModuleName,
-					hook->pszModule,
-					hook->pszProcName
-				);
+				dlogp("Hooked %S:%s", hook->pszModule, hook->pszProcName);
 			}
 		}
 		if (hooksInstalled > 0)
@@ -91,10 +88,7 @@ BOOL WINAPI HookDllMain(
 			auto enableStatus = MH_EnableHook(MH_ALL_HOOKS);
 			if (enableStatus != MH_OK)
 			{
-				dprintf("[AppInitHook] [%s] MH_EnableHook failed, status: %s",
-					szModuleName,
-					MH_StatusToString(enableStatus)
-				);
+				dlogp("MH_EnableHook failed, status: %s", MH_StatusToString(enableStatus));
 				return FALSE;
 			}
 		}

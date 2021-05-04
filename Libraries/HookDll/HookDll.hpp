@@ -5,6 +5,7 @@
 
 void dprintf(const char* format, ...);
 void dputs(const char* text);
+const char* modname();
 
 // Call this from your DllMain to use the HOOK macros
 BOOL WINAPI HookDllMain(
@@ -51,9 +52,5 @@ static MH_STATUS WINAPI MH_CreateHookApi(const wchar_t* pszModule, const char* p
 	return MH_CreateHookApi(pszModule, pszProcName, pDetour, (LPVOID*)&ppOriginal);
 }
 
-#ifndef MODULENAME
-#error MODULENAME not defined!
-#endif // MODULENAME
-
-#define dlog() dprintf("[AppInitHook] [" MODULENAME "] [%u] " __FUNCTION__ "\n", GetCurrentProcessId())
-#define dlogp(fmt, ...) dprintf("[AppInitHook] [" MODULENAME "] [%u] " __FUNCTION__ "(" fmt ")\n", GetCurrentProcessId(), __VA_ARGS__)
+#define dlog() dprintf("[AppInitHook] [%s] [%u] " __FUNCTION__ "\n", modname(), GetCurrentProcessId())
+#define dlogp(fmt, ...) dprintf("[AppInitHook] [%s] [%u] " __FUNCTION__ "(" fmt ")\n", modname(), GetCurrentProcessId(), __VA_ARGS__)

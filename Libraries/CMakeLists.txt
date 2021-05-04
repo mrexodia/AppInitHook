@@ -134,10 +134,6 @@ endif()
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${AppInitDispatcher_SOURCES})
 
-target_compile_definitions(AppInitDispatcher PUBLIC
-	"MODULENAME=\"${CMKR_TARGET}\""
-)
-
 target_link_libraries(AppInitDispatcher PUBLIC
 	HookDll
 )
