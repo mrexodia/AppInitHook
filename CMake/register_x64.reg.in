@@ -2,5 +2,5 @@ Windows Registry Editor Version 5.00
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows]
 "LoadAppInit_DLLs"=dword:00000001
-"AppInit_DLLs"="C:\full\path\to\AppInitDispatcher_x64.dll"
+"AppInit_DLLs"="${APPINITDISPATCHER_PATH}"
 

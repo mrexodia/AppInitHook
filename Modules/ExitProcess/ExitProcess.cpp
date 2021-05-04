@@ -1,5 +1,4 @@
-#include <Windows.h>
-#include "debug.h"
+#include "HookDll.hpp"
 
 BOOL WINAPI DllMain(
 	_In_ HINSTANCE hinstDLL,

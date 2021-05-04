@@ -78,38 +78,36 @@ target_include_directories(MinHook PUBLIC
 
 unset(CMKR_TARGET)
 unset(CMKR_SOURCES)
-# Target DebugHelper
-set(CMKR_TARGET DebugHelper)
-set(DebugHelper_SOURCES "")
-
-set(CMKR_SOURCES ${DebugHelper_SOURCES})
-add_library(DebugHelper INTERFACE)
-
-if(DebugHelper_SOURCES)
-	target_sources(DebugHelper INTERFACE ${DebugHelper_SOURCES})
-endif()
-
-target_include_directories(DebugHelper INTERFACE
-	DebugHelper
-)
-
-unset(CMKR_TARGET)
-unset(CMKR_SOURCES)
 # Target HookDll
 set(CMKR_TARGET HookDll)
 set(HookDll_SOURCES "")
 
+list(APPEND HookDll_SOURCES
+	"HookDll/HookDll.cpp"
+	"HookDll/HookDll.hpp"
+	"ntdll/ntdll.h"
+)
+
+list(APPEND HookDll_SOURCES
+	cmake.toml
+)
+
 set(CMKR_SOURCES ${HookDll_SOURCES})
-add_library(HookDll INTERFACE)
+add_library(HookDll STATIC)
 
 if(HookDll_SOURCES)
-	target_sources(HookDll INTERFACE ${HookDll_SOURCES})
+	target_sources(HookDll PRIVATE ${HookDll_SOURCES})
 endif()
 
-target_link_libraries(HookDll INTERFACE
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${HookDll_SOURCES})
+
+target_include_directories(HookDll PUBLIC
+	HookDll
+)
+
+target_link_libraries(HookDll PUBLIC
 	ntdll
 	MinHook
-	DebugHelper
 )
 
 unset(CMKR_TARGET)
@@ -120,7 +118,7 @@ set(AppInitDispatcher_SOURCES "")
 
 list(APPEND AppInitDispatcher_SOURCES
 	"AppInitDispatcher/AppInitDispatcher.cpp"
-	"AppInitDispatcher/Utf8Ini.h"
+	"AppInitDispatcher/Utf8Ini.hpp"
 )
 
 list(APPEND AppInitDispatcher_SOURCES
@@ -136,19 +134,12 @@ endif()
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${AppInitDispatcher_SOURCES})
 
-target_link_libraries(AppInitDispatcher PUBLIC
-	DebugHelper
+target_compile_definitions(AppInitDispatcher PUBLIC
+	"MODULENAME=\"${CMKR_TARGET}\""
 )
 
-# TODO: this doesn't actually do anything yet
-add_custom_target(register_AppInitDLL
-    COMMAND
-        echo "$<TARGET_FILE:AppInitDispatcher>"
-    SOURCES
-        AppInitDispatcher/install_x86.reg
-        AppInitDispatcher/install_x64.reg
-    DEPENDS
-        AppInitDispatcher
+target_link_libraries(AppInitDispatcher PUBLIC
+	HookDll
 )
 
 unset(CMKR_TARGET)

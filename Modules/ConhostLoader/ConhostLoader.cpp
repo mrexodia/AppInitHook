@@ -1,6 +1,4 @@
-#include "ntdll/ntdll.h"
-#include <Windows.h>
-#include "debug.h"
+#include "HookDll.hpp"
 
 static DWORD GetParentPid()
 {

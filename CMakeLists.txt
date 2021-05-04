@@ -38,6 +38,11 @@ project(AppInitHook
 		0.1.0
 )
 
+# Check if we're compiling with MSVC
+if(NOT MSVC)
+	message(FATAL_ERROR "Non-MSVC compilers are not supported!")
+endif()
+
 # Flatten build hierarchy (see: https://stackoverflow.com/a/51320498/1806760)
 if(CMAKE_CONFIGURATION_TYPES)
 	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>")
@@ -51,8 +56,26 @@ else()
 	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
 endif()
 
+# Build the register_AppInitDLL to register AppInitDispatcher.dll
+add_custom_target(register_AppInitDLLs
+    COMMAND
+        "${CMAKE_COMMAND}" "-DAPPINITDISPATCHER_PATH=$<TARGET_FILE:AppInitDispatcher>" -DCMAKE_SIZEOF_VOID_P=${CMAKE_SIZEOF_VOID_P} -P "${CMAKE_CURRENT_SOURCE_DIR}/CMake/register_AppInitDLLs.cmake"
+    SOURCES
+        CMake/register_x64.reg.in
+        CMake/register_x86.reg.in
+    DEPENDS
+        AppInitDispatcher
+)
+
+if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/Private")
+	file(
+		COPY "${CMAKE_CURRENT_SOURCE_DIR}/CMake/cmake.toml"
+		DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/Private"
+	)
+endif()
+
 # Options
-option(APPINITHOOK_PRIVATE_PROJECTS OFF)
+option(APPINITHOOK_PRIVATE_MODULES OFF)
 
 # Libraries
 set(CMKR_CMAKE_FOLDER ${CMAKE_FOLDER})
@@ -75,7 +98,7 @@ add_subdirectory(Modules)
 set(CMAKE_FOLDER ${CMKR_CMAKE_FOLDER})
 
 
-if(APPINITHOOK_PRIVATE_PROJECTS)
+if(APPINITHOOK_PRIVATE_MODULES)
 	# Private
 	set(CMKR_CMAKE_FOLDER ${CMAKE_FOLDER})
 	if(CMAKE_FOLDER)

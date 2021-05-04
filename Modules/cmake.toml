@@ -1,64 +1,77 @@
 [target.AppInitExampleModule]
 type = "shared"
-sources = ["AppInitExampleModule/*.cpp", "AppInitExampleModule/*.h"]
+sources = ["AppInitExampleModule/*.cpp", "AppInitExampleModule/*.hpp"]
 link-libraries = ["HookDll"]
+compile-definitions = ["MODULENAME=\"${CMKR_TARGET}\""]
 
 [target.clang-cl-hacks]
 type = "shared"
-sources = ["clang-cl-hacks/*.cpp", "clang-cl-hacks/*.h"]
+sources = ["clang-cl-hacks/*.cpp", "clang-cl-hacks/*.hpp"]
 link-libraries = ["HookDll"]
+compile-definitions = ["MODULENAME=\"${CMKR_TARGET}\""]
 
 [target.CMakeClean]
 type = "shared"
-sources = ["CMakeClean/*.cpp", "CMakeClean/*.h"]
+sources = ["CMakeClean/*.cpp", "CMakeClean/*.hpp"]
 link-libraries = ["HookDll"]
+compile-definitions = ["MODULENAME=\"${CMKR_TARGET}\""]
 
 [target.CmdImproved]
 type = "shared"
-sources = ["CmdImproved/*.cpp", "CmdImproved/*.h"]
+sources = ["CmdImproved/*.cpp", "CmdImproved/*.hpp"]
 link-libraries = ["HookDll"]
+compile-definitions = ["MODULENAME=\"${CMKR_TARGET}\""]
 
 [target.ConhostLoader]
 type = "shared"
-sources = ["ConhostLoader/*.cpp", "ConhostLoader/*.h"]
+sources = ["ConhostLoader/*.cpp", "ConhostLoader/*.hpp"]
 link-libraries = ["HookDll"]
+compile-definitions = ["MODULENAME=\"${CMKR_TARGET}\""]
 
 [target.ExitProcess]
 type = "shared"
-sources = ["ExitProcess/*.cpp", "ExitProcess/*.h"]
+sources = ["ExitProcess/*.cpp", "ExitProcess/*.hpp"]
 link-libraries = ["HookDll"]
+compile-definitions = ["MODULENAME=\"${CMKR_TARGET}\""]
 
 [target.ForceQuit]
 type = "shared"
-sources = ["ForceQuit/*.cpp", "ForceQuit/*.h"]
+sources = ["ForceQuit/*.cpp", "ForceQuit/*.hpp"]
 link-libraries = ["HookDll"]
+compile-definitions = ["MODULENAME=\"${CMKR_TARGET}\""]
 
 [target.GitMagic]
 type = "shared"
-sources = ["GitMagic/*.cpp", "GitMagic/*.h"]
+sources = ["GitMagic/*.cpp", "GitMagic/*.hpp"]
 link-libraries = ["HookDll"]
+compile-definitions = ["MODULENAME=\"${CMKR_TARGET}\""]
 
 [target.HighPriority]
 type = "shared"
-sources = ["HighPriority/*.cpp", "HighPriority/*.h"]
+sources = ["HighPriority/*.cpp", "HighPriority/*.hpp"]
 link-libraries = ["HookDll"]
+compile-definitions = ["MODULENAME=\"${CMKR_TARGET}\""]
 
 [target.NoSoftwareInventory]
 type = "shared"
-sources = ["NoSoftwareInventory/*.cpp", "NoSoftwareInventory/*.h"]
+sources = ["NoSoftwareInventory/*.cpp", "NoSoftwareInventory/*.hpp"]
 link-libraries = ["HookDll"]
+compile-definitions = ["MODULENAME=\"${CMKR_TARGET}\""]
 
 [target.TotalCommander]
 type = "shared"
-sources = ["TotalCommander/*.cpp", "TotalCommander/*.h"]
+sources = ["TotalCommander/*.cpp", "TotalCommander/*.hpp"]
 link-libraries = ["HookDll"]
+compile-definitions = ["MODULENAME=\"${CMKR_TARGET}\""]
 
 [target.WerfaultMagic]
 type = "shared"
-sources = ["WerfaultMagic/*.cpp", "WerfaultMagic/*.h"]
+sources = ["WerfaultMagic/*.cpp", "WerfaultMagic/*.hpp"]
 link-libraries = ["HookDll"]
+compile-definitions = ["MODULENAME=\"${CMKR_TARGET}\""]
 
 [target.WowUndirect]
 type = "shared"
-sources = ["WowUndirect/*.cpp", "WowUndirect/*.h"]
+sources = ["WowUndirect/*.cpp", "WowUndirect/*.hpp"]
 link-libraries = ["HookDll"]
+compile-definitions = ["MODULENAME=\"${CMKR_TARGET}\""]

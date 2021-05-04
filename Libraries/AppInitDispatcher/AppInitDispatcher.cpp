@@ -1,7 +1,5 @@
-#include <Windows.h>
-#define DEBUGNAME "AppInitDispatcher"
-#include "debug.h"
-#include "Utf8Ini.h"
+#include "HookDll.hpp"
+#include "Utf8Ini.hpp"
 
 static std::string Utf16ToUtf8(const wchar_t* wstr)
 {

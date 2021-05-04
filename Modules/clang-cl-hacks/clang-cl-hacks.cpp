@@ -1,44 +1,4 @@
-#include "ntdll/ntdll.h"
-#include <Windows.h>
-#include "debug.h"
-#include "MinHook/MinHook.h"
-
-// Can's magic macro for passing macrofn(ESCAPE(T<int, int>))
-#define ESCAPE(...) __VA_ARGS__
-
-extern "C" __declspec(dllexport) void surprise() { }
-
-struct Hook
-{
-	const wchar_t* pszModule;
-	const char* pszProcName;
-	PVOID pDetour;
-	PVOID* ppOriginal;
-};
-
-#pragma section(".hooks$1",long,read)
-#pragma section(".hooks$2",long,read)
-#pragma section(".hooks$3",long,read)
-#pragma comment(linker, "/merge:hooks=.rdata")
-
-// Can's magic
-__declspec(allocate(".hooks$1")) const Hook hooks_begin;
-__declspec(allocate(".hooks$3")) const Hook hooks_end;
-
-// You likely forgot about WINAPI
-// error C2373: 'hook_Function': redefinition; different type modifiers
-#define HOOK(Dll, ReturnType, Function) \
-	static decltype(&Function) original_ ## Function; \
-	static decltype(Function) hook_ ## Function; \
-	extern "C" __declspec(dllexport) __declspec(allocate(".hooks$2")) Hook dupa_ ## Function = { L ### Function, #Function, hook_ ## Function, (LPVOID*)&original_ ## Function }; \
-	static ReturnType hook_ ## Function
-
-#define HOOK_ENTRYPOINT() \
-	int EntryPoint(); \
-	static decltype(&EntryPoint) original_EntryPoint; \
-	static decltype(EntryPoint) hook_EntryPoint; \
-	extern "C" __declspec(dllexport) __declspec(allocate(".hooks$2")) Hook dupa_EntryPoint = { nullptr, nullptr, hook_ ## EntryPoint, (LPVOID*)&original_ ## EntryPoint }; \
-	static int hook_EntryPoint()
+#include "HookDll.hpp"
 
 #include <iterator>
 #include <vector>
@@ -77,24 +37,6 @@ BOOL WINAPI DllMain(
 			}
 		}
 		LocalFree(argv);
-		if (MH_Initialize() != MH_OK)
-		{
-			dlogp("MH_Initialize failed");
-			return FALSE;
-		}
-		for (auto hook = std::next(&hooks_begin); hook != &hooks_end; ++hook)
-		{
-			if (!MH_CreateHookApi(hook->pszModule, hook->pszProcName, hook->pDetour, hook->ppOriginal))
-			{
-				dlogp("MH_CreateHook(%s) failed", hook->pszProcName);
-				return FALSE;
-			}
-		}
-		if (MH_EnableHook(MH_ALL_HOOKS) != MH_OK)
-		{
-			dlogp("MH_EnableHook failed");
-			return FALSE;
-		}
 	}
-	return TRUE;
+	return HookDllMain(hinstDLL, fdwReason, lpvReserved);
 }

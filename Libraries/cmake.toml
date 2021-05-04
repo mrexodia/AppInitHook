@@ -14,27 +14,14 @@ type = "static"
 sources = ["MinHook/**.c", "MinHook/**.h"]
 include-directories = ["${CMAKE_CURRENT_SOURCE_DIR}"]
 
-[target.DebugHelper]
-type = "interface"
-include-directories = ["DebugHelper"]
-
 [target.HookDll]
-type = "interface"
-link-libraries = ["ntdll", "MinHook", "DebugHelper"]
+type = "static"
+sources = ["HookDll/*.cpp", "HookDll/*.hpp", "ntdll/ntdll.h"]
+include-directories = ["HookDll"]
+link-libraries = ["ntdll", "MinHook"]
 
 [target.AppInitDispatcher]
 type = "shared"
-sources = ["AppInitDispatcher/*.cpp", "AppInitDispatcher/*.h"]
-link-libraries = ["DebugHelper"]
-cmake-after = """
-# TODO: this doesn't actually do anything yet
-add_custom_target(register_AppInitDLL
-    COMMAND
-        echo \"$<TARGET_FILE:AppInitDispatcher>\"
-    SOURCES
-        AppInitDispatcher/install_x86.reg
-        AppInitDispatcher/install_x64.reg
-    DEPENDS
-        AppInitDispatcher
-)
-"""
+sources = ["AppInitDispatcher/*.cpp", "AppInitDispatcher/*.hpp"]
+link-libraries = ["HookDll"]
+compile-definitions = ["MODULENAME=\"${CMKR_TARGET}\""]

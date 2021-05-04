@@ -1,5 +1,4 @@
 #include <Windows.h>
-#include <stdio.h>
 
 BOOL WINAPI DllMain(
 	_In_ HINSTANCE hinstDLL,
