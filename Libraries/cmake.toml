@@ -25,3 +25,4 @@ type = "shared"
 sources = ["AppInitDispatcher/*.cpp", "AppInitDispatcher/*.hpp"]
 link-libraries = ["HookDll"]
 compile-definitions = ["MODULENAME=\"${CMKR_TARGET}\""]
+properties = { EXCLUDE_FROM_DEFAULT_BUILD = "TRUE" }

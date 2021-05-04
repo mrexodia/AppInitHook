@@ -58,13 +58,13 @@ endif()
 
 # Build the register_AppInitDLL to register AppInitDispatcher.dll
 add_custom_target(register_AppInitDLLs
+	COMMAND
+		"${CMAKE_COMMAND}" --build "${PROJECT_BINARY_DIR}" --target AppInitDispatcher --config $<CONFIG>
     COMMAND
         "${CMAKE_COMMAND}" "-DAPPINITDISPATCHER_PATH=$<TARGET_FILE:AppInitDispatcher>" -DCMAKE_SIZEOF_VOID_P=${CMAKE_SIZEOF_VOID_P} -P "${CMAKE_CURRENT_SOURCE_DIR}/CMake/register_AppInitDLLs.cmake"
     SOURCES
         CMake/register_x64.reg.in
         CMake/register_x86.reg.in
-    DEPENDS
-        AppInitDispatcher
 )
 
 if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/Private")

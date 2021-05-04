@@ -142,5 +142,10 @@ target_link_libraries(AppInitDispatcher PUBLIC
 	HookDll
 )
 
+set_target_properties(AppInitDispatcher PROPERTIES
+	EXCLUDE_FROM_DEFAULT_BUILD
+		TRUE
+)
+
 unset(CMKR_TARGET)
 unset(CMKR_SOURCES)
