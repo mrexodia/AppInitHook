@@ -65,7 +65,6 @@ If you enable `-DAPPINITHOOK_PRIVATE_MODULES=ON` it will look for `Private/cmake
 type = "shared"
 sources = ["MyPrivateModule/*.cpp", "MyPrivateModule/*.hpp"]
 link-libraries = ["HookDll"]
-compile-definitions = ["MODULENAME=\"${CMKR_TARGET}\""]
 ```
 
 You can set up your own private git repository in this folder if you desire, since the folder is fully ignored by the `.gitignore` of this project.
