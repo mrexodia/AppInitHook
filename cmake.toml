@@ -54,10 +54,19 @@ add_custom_target(register_AppInitDLLs
         CMake/register_x86.reg.in
 )
 
+# Create a skeleton private module
 if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/Private")
 	file(
 		COPY "${CMAKE_CURRENT_SOURCE_DIR}/CMake/cmake.toml"
 		DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/Private"
+	)
+	file(
+		COPY "${CMAKE_CURRENT_SOURCE_DIR}/Modules/AppInitExampleModule/AppInitExampleModule.cpp"
+		DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/Private/MyPrivateModule"
+	)
+	file(RENAME
+		"${CMAKE_CURRENT_SOURCE_DIR}/Private/MyPrivateModule/AppInitExampleModule.cpp"
+		"${CMAKE_CURRENT_SOURCE_DIR}/Private/MyPrivateModule/MyPrivateModule.cpp"
 	)
 endif()
 """

@@ -2,4 +2,3 @@
 type = "shared"
 sources = ["MyPrivateModule/*.cpp", "MyPrivateModule/*.hpp"]
 link-libraries = ["HookDll"]
-compile-definitions = ["DEBUGNAME=\"${CMKR_TARGET}\""]
