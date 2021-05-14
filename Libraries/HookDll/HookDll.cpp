@@ -7,7 +7,6 @@
 // Empty export to allow adding this DLL to the IAT
 extern "C" __declspec(dllexport) void inject() { }
 
-
 void dprintf(const char* format, ...)
 {
 	static char dprintf_msg[66000];
@@ -72,15 +71,51 @@ BOOL WINAPI HookDllMain(
 		int hooksInstalled = 0;
 		for (auto hook = std::next(&hooks_begin); hook != &hooks_end; ++hook, hooksInstalled++)
 		{
-			auto hookStatus = MH_CreateHookApi(hook->pszModule, hook->pszProcName, hook->pDetour, hook->ppOriginal);
-			if (hookStatus != MH_OK)
+			if (hook->pszModule == nullptr && hook->pszProcName == nullptr)
 			{
-				dlogp("Failed to hook %S:%s, status: %s", hook->pszModule, hook->pszProcName, MH_StatusToString(hookStatus));
-				return FALSE;
+				void* entryPoint = nullptr;
+				auto base = (char*)GetModuleHandleW(nullptr);
+				auto pdh = PIMAGE_DOS_HEADER(base);
+				if (pdh->e_magic == IMAGE_DOS_SIGNATURE)
+				{
+					auto pnth = PIMAGE_NT_HEADERS(base + pdh->e_lfanew);
+					if (pnth->Signature == IMAGE_NT_SIGNATURE)
+					{
+						if (pnth->OptionalHeader.Magic == IMAGE_NT_OPTIONAL_HDR_MAGIC)
+						{
+							entryPoint = base + pnth->OptionalHeader.AddressOfEntryPoint;
+						}
+					}
+
+				}
+				if (entryPoint == nullptr)
+				{
+					dlogp("Failed to get entry point");
+					return FALSE;
+				}
+				auto hookStatus = MH_CreateHook(entryPoint, hook->pDetour, hook->ppOriginal);
+				if (hookStatus != MH_OK)
+				{
+					dlogp("Failed to hook EntryPoint 0x%p, status: %s", entryPoint, MH_StatusToString(hookStatus));
+					return FALSE;
+				}
+				else
+				{
+					dlogp("Hooked EntryPoint 0x%p", entryPoint);
+				}
 			}
 			else
 			{
-				dlogp("Hooked %S:%s", hook->pszModule, hook->pszProcName);
+				auto hookStatus = MH_CreateHookApi(hook->pszModule, hook->pszProcName, hook->pDetour, hook->ppOriginal);
+				if (hookStatus != MH_OK)
+				{
+					dlogp("Failed to hook %S:%s, status: %s", hook->pszModule, hook->pszProcName, MH_StatusToString(hookStatus));
+					return FALSE;
+				}
+				else
+				{
+					dlogp("Hooked %S:%s", hook->pszModule, hook->pszProcName);
+				}
 			}
 		}
 		if (hooksInstalled > 0)
