@@ -80,6 +80,10 @@ BOOL WINAPI HookDllMain(
 		VirtualProtect(ntpvm_copy, 0x1000, PAGE_EXECUTE, &oldProtect);
 		MH_VirtualProtect = VirtualProtectSyscall;
 
+#ifdef _WIN64
+		auto tlsIndex = TlsAlloc();
+#endif // _WIN64
+
 		auto initStatus = MH_Initialize();
 		if (initStatus != MH_OK)
 		{
@@ -128,7 +132,58 @@ BOOL WINAPI HookDllMain(
 			}
 			else
 			{
-				auto hookStatus = MH_CreateHookApi(hook->pszModule, hook->pszProcName, hook->pDetour, hook->ppOriginal);
+				auto pDetour = hook->pDetour;
+
+#ifdef _WIN64
+				unsigned char stub_template[]
+				{
+					// cmp qword ptr gs:[0x1480],0x0
+					0x65, 0x48, 0x83, 0x3C, 0x25, 0x80, 0x14, 0x00, 0x00, 0x00,
+					// jz do_detour
+					0x74, 0x06,
+					// jmp qword ptr [original]
+					0xFF, 0x25, 0x29, 0x00, 0x00, 0x00,
+					// do_detour:
+					// sub rsp,0x8
+					0x48, 0x83, 0xEC, 0x08,
+					// mov qword ptr gs:[0x1480],0x1
+					0x65, 0x48, 0xC7, 0x04, 0x25, 0x80, 0x14, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00,
+					// call qword ptr [detour]
+					0xFF, 0x15, 0x1A, 0x00, 0x00, 0x00,
+					// mov qword ptr gs:[0x1480],0x0
+					0x65, 0x48, 0xC7, 0x04, 0x25, 0x80, 0x14, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+					// add rsp,0x8
+					0x48, 0x83, 0xC4, 0x08,
+					// ret
+					0xC3,
+					// original:
+					0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+					// detour:
+					0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+				};
+
+				auto stub = (unsigned char*)VirtualAlloc(0, 0x1000, MEM_RESERVE | MEM_COMMIT, PAGE_EXECUTE_READWRITE);
+				if (!stub)
+				{
+					dlogp("Failed to allocate reentrancy stub for %S:%s, LastError: %d", hook->pszModule, hook->pszProcName, GetLastError());
+					return FALSE;
+				}
+
+				// Copy template
+				memcpy(stub, stub_template, sizeof(stub_template));
+
+				// Copy in TLS indices
+				DWORD tlsOffset = 0x1480 + sizeof(ULONG_PTR) * tlsIndex;
+				memcpy(stub + 5, &tlsOffset, sizeof(tlsOffset));
+				memcpy(stub + 27, &tlsOffset, sizeof(tlsOffset));
+				memcpy(stub + 46, &tlsOffset, sizeof(tlsOffset));
+
+				// Copy in the detour function pointer
+				memcpy(stub + 67, &hook->pDetour, sizeof(hook->pDetour));
+				pDetour = stub;
+#endif // _WIN64
+
+				auto hookStatus = MH_CreateHookApi(hook->pszModule, hook->pszProcName, pDetour, hook->ppOriginal);
 				if (hookStatus != MH_OK)
 				{
 					dlogp("Failed to hook %S:%s, status: %s", hook->pszModule, hook->pszProcName, MH_StatusToString(hookStatus));
@@ -136,6 +191,14 @@ BOOL WINAPI HookDllMain(
 				}
 				else
 				{
+#ifdef _WIN64
+					// Copy in the original function pointer
+					memcpy(stub + 59, hook->ppOriginal, sizeof(*hook->ppOriginal));
+
+					// Change to execute-only
+					VirtualProtect(stub, 0x1000, PAGE_EXECUTE, &oldProtect);
+#endif // _WIN64
+
 					dlogp("Hooked %S:%s", hook->pszModule, hook->pszProcName);
 				}
 			}
