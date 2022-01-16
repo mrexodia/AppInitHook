@@ -92,6 +92,8 @@ volatile LONG g_isLocked = FALSE;
 // Private heap handle. If not NULL, this library is initialized.
 HANDLE g_hHeap = NULL;
 
+MH_VirtualProtectPtr MH_VirtualProtect = VirtualProtect;
+
 // Hook entries.
 struct
 {
@@ -361,7 +363,7 @@ static MH_STATUS EnableHookLL(UINT pos, BOOL enable)
         patchSize    += sizeof(JMP_REL_SHORT);
     }
 
-    if (!VirtualProtect(pPatchTarget, patchSize, PAGE_EXECUTE_READWRITE, &oldProtect))
+    if (!MH_VirtualProtect(pPatchTarget, patchSize, PAGE_EXECUTE_READWRITE, &oldProtect))
         return MH_ERROR_MEMORY_PROTECT;
 
     if (enable)
@@ -385,7 +387,7 @@ static MH_STATUS EnableHookLL(UINT pos, BOOL enable)
             memcpy(pPatchTarget, pHook->backup, sizeof(JMP_REL));
     }
 
-    VirtualProtect(pPatchTarget, patchSize, oldProtect, &oldProtect);
+    MH_VirtualProtect(pPatchTarget, patchSize, oldProtect, &oldProtect);
 
     // Just-in-case measure.
     FlushInstructionCache(GetCurrentProcess(), pPatchTarget, patchSize);

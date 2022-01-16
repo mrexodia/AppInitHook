@@ -53,6 +53,17 @@ const char* modname()
 	return szModuleName;
 }
 
+static decltype(NtProtectVirtualMemory)* ntpvm_copy;
+
+static BOOL WINAPI VirtualProtectSyscall(
+	_In_  LPVOID lpAddress,
+	_In_  SIZE_T dwSize,
+	_In_  DWORD flNewProtect,
+	_Out_ PDWORD lpflOldProtect)
+{
+	return NT_SUCCESS(ntpvm_copy(GetCurrentProcess(), &lpAddress, &dwSize, flNewProtect, lpflOldProtect));
+}
+
 // Call this from your DllMain to use the HOOK macros
 BOOL WINAPI HookDllMain(
 	_In_ HINSTANCE hinstDLL,
@@ -62,6 +73,13 @@ BOOL WINAPI HookDllMain(
 {
 	if (fdwReason == DLL_PROCESS_ATTACH)
 	{
+		// Super awful hack
+		ntpvm_copy = (decltype(NtProtectVirtualMemory)*)VirtualAlloc(0, 0x1000, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+		memcpy(ntpvm_copy, GetProcAddress(GetModuleHandleW(L"ntdll.dll"), "NtProtectVirtualMemory"), 32);
+		DWORD oldProtect;
+		VirtualProtect(ntpvm_copy, 0x1000, PAGE_EXECUTE, &oldProtect);
+		MH_VirtualProtect = VirtualProtectSyscall;
+
 		auto initStatus = MH_Initialize();
 		if (initStatus != MH_OK)
 		{
@@ -71,6 +89,10 @@ BOOL WINAPI HookDllMain(
 		int hooksInstalled = 0;
 		for (auto hook = std::next(&hooks_begin); hook != &hooks_end; ++hook, hooksInstalled++)
 		{
+			// Skip uninitialized hooks
+			if (hook->pDetour == nullptr || hook->ppOriginal == nullptr)
+				continue;
+
 			if (hook->pszModule == nullptr && hook->pszProcName == nullptr)
 			{
 				void* entryPoint = nullptr;

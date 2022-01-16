@@ -180,6 +180,11 @@ extern "C" {
     // Translates the MH_STATUS to its name as a string.
     const char * WINAPI MH_StatusToString(MH_STATUS status);
 
+    // Allows using a custom function for VirtualProtect
+    typedef BOOL(WINAPI *MH_VirtualProtectPtr)(LPVOID, SIZE_T, DWORD, PDWORD);
+
+    extern MH_VirtualProtectPtr MH_VirtualProtect;
+
 #ifdef __cplusplus
 }
 #endif
