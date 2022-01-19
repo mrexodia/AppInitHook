@@ -147,5 +147,9 @@ endif()
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${TestLoader_SOURCES})
 
+target_link_libraries(TestLoader PRIVATE
+	ntdll
+)
+
 unset(CMKR_TARGET)
 unset(CMKR_SOURCES)

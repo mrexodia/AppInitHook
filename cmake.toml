@@ -74,3 +74,4 @@ endif()
 [target.TestLoader]
 type = "executable"
 sources = ["TestLoader/*.cpp", "TestLoader/*.hpp"]
+link-libraries = ["ntdll"]

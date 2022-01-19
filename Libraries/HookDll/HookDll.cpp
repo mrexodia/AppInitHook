@@ -135,25 +135,30 @@ BOOL WINAPI HookDllMain(
 				auto pDetour = hook->pDetour;
 
 #ifdef _WIN64
+				// This is a 'proper' function, see:
+				// - https://docs.microsoft.com/en-us/cpp/build/x64-calling-convention
+				// - https://docs.microsoft.com/en-us/cpp/build/prolog-and-epilog
 				unsigned char stub_template[]
 				{
+					// sub rsp,0x28
+					0x48, 0x83, 0xEC, 0x28,
 					// cmp qword ptr gs:[0x1480],0x0
 					0x65, 0x48, 0x83, 0x3C, 0x25, 0x80, 0x14, 0x00, 0x00, 0x00,
 					// jz do_detour
-					0x74, 0x06,
+					0x74, 0x0A,
+					// add rsp,0x28
+					0x48, 0x83, 0xC4, 0x28,
 					// jmp qword ptr [original]
-					0xFF, 0x25, 0x29, 0x00, 0x00, 0x00,
+					0xFF, 0x25, 0x25, 0x00, 0x00, 0x00,
 					// do_detour:
-					// sub rsp,0x8
-					0x48, 0x83, 0xEC, 0x08,
 					// mov qword ptr gs:[0x1480],0x1
 					0x65, 0x48, 0xC7, 0x04, 0x25, 0x80, 0x14, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00,
 					// call qword ptr [detour]
 					0xFF, 0x15, 0x1A, 0x00, 0x00, 0x00,
 					// mov qword ptr gs:[0x1480],0x0
 					0x65, 0x48, 0xC7, 0x04, 0x25, 0x80, 0x14, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-					// add rsp,0x8
-					0x48, 0x83, 0xC4, 0x08,
+					// add rsp,0x28
+					0x48, 0x83, 0xC4, 0x28,
 					// ret
 					0xC3,
 					// original:
@@ -174,12 +179,12 @@ BOOL WINAPI HookDllMain(
 
 				// Copy in TLS indices
 				DWORD tlsOffset = 0x1480 + sizeof(ULONG_PTR) * tlsIndex;
-				memcpy(stub + 5, &tlsOffset, sizeof(tlsOffset));
-				memcpy(stub + 27, &tlsOffset, sizeof(tlsOffset));
-				memcpy(stub + 46, &tlsOffset, sizeof(tlsOffset));
+				memcpy(stub + 9, &tlsOffset, sizeof(tlsOffset));
+				memcpy(stub + 31, &tlsOffset, sizeof(tlsOffset));
+				memcpy(stub + 50, &tlsOffset, sizeof(tlsOffset));
 
 				// Copy in the detour function pointer
-				memcpy(stub + 67, &hook->pDetour, sizeof(hook->pDetour));
+				memcpy(stub + 71, &hook->pDetour, sizeof(hook->pDetour));
 				pDetour = stub;
 #endif // _WIN64
 
@@ -193,7 +198,7 @@ BOOL WINAPI HookDllMain(
 				{
 #ifdef _WIN64
 					// Copy in the original function pointer
-					memcpy(stub + 59, hook->ppOriginal, sizeof(*hook->ppOriginal));
+					memcpy(stub + 63, hook->ppOriginal, sizeof(*hook->ppOriginal));
 
 					// Change to execute-only
 					VirtualProtect(stub, 0x1000, PAGE_EXECUTE, &oldProtect);
