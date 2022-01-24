@@ -9,7 +9,7 @@ const char* modname();
 
 // Call this from your DllMain to use the HOOK macros
 BOOL WINAPI HookDllMain(
-	_In_ HINSTANCE hinstDLL, 
+	_In_ HINSTANCE hinstDLL,
 	_In_ DWORD     fdwReason,
 	_In_ LPVOID    lpvReserved
 );
@@ -21,6 +21,15 @@ struct Hook
 	PVOID pDetour;
 	PVOID* ppOriginal;
 };
+
+#ifdef _WIN64
+unsigned char* MakeReentrantDetour(const Hook* hook, PVOID& pDetour);
+bool ApplyReentrantHookProtection(const Hook* hook, unsigned char* stub);
+#else
+// TODO: implement for 32 bit
+unsigned char* MakeReentrantDetour(const Hook* hook, PVOID& pDetour) { return (unsigned char*)1; }
+bool ApplyReentrantHookProtection(const Hook* hook, unsigned char* stub) { return true; }
+#endif // _WIN64
 
 #pragma section(".hooks$1",long,read)
 #pragma section(".hooks$2",long,read)

@@ -15,6 +15,7 @@ include-directories = ["${CMAKE_CURRENT_SOURCE_DIR}"]
 [target.HookDll]
 type = "static"
 sources = ["HookDll/*.cpp", "HookDll/*.hpp", "ntdll/ntdll.h"]
+x64.sources = ["HookDll/x64/*.cpp"]
 include-directories = ["HookDll"]
 link-libraries = ["ntdll", "MinHook"]
 

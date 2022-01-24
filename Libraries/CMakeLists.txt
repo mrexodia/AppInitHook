@@ -76,6 +76,12 @@ list(APPEND HookDll_SOURCES
 	"ntdll/ntdll.h"
 )
 
+if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+	list(APPEND HookDll_SOURCES
+		"HookDll/x64/reentrancy.cpp"
+	)
+endif()
+
 list(APPEND HookDll_SOURCES
 	cmake.toml
 )
