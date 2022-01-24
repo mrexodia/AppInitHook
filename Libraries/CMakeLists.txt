@@ -21,21 +21,9 @@ target_include_directories(ntdll INTERFACE
 	${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-target_link_directories(ntdll INTERFACE
-	ntdll
+target_link_libraries(ntdll INTERFACE
+	ntdll.lib
 )
-
-if(CMAKE_SIZEOF_VOID_P EQUAL 4)
-	target_link_libraries(ntdll INTERFACE
-		ntdll_x86
-	)
-endif()
-
-if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-	target_link_libraries(ntdll INTERFACE
-		ntdll_x64
-	)
-endif()
 
 unset(CMKR_TARGET)
 unset(CMKR_SOURCES)

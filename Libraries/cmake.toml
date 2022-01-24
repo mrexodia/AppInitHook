@@ -5,9 +5,7 @@ x64 = "CMAKE_SIZEOF_VOID_P EQUAL 8"
 [target.ntdll]
 type = "interface"
 include-directories = ["${CMAKE_CURRENT_SOURCE_DIR}"]
-link-directories = ["ntdll"]
-x86.link-libraries = ["ntdll_x86"]
-x64.link-libraries = ["ntdll_x64"]
+link-libraries = ["ntdll.lib"]
 
 [target.MinHook]
 type = "static"
