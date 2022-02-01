@@ -27,8 +27,8 @@ unsigned char* MakeReentrantDetour(const Hook* hook, PVOID& pDetour);
 bool ApplyReentrantHookProtection(const Hook* hook, unsigned char* stub);
 #else
 // TODO: implement for 32 bit
-unsigned char* MakeReentrantDetour(const Hook* hook, PVOID& pDetour) { return (unsigned char*)1; }
-bool ApplyReentrantHookProtection(const Hook* hook, unsigned char* stub) { return true; }
+inline unsigned char* MakeReentrantDetour(const Hook* hook, PVOID& pDetour) { return (unsigned char*)1; }
+inline bool ApplyReentrantHookProtection(const Hook* hook, unsigned char* stub) { return true; }
 #endif // _WIN64
 
 #pragma section(".hooks$1",long,read)

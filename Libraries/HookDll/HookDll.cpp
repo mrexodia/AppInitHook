@@ -66,9 +66,9 @@ static BOOL WINAPI VirtualProtectSyscall(
 	return NT_SUCCESS(ntpvm_copy(GetCurrentProcess(), &lpAddress, &dwSize, flNewProtect, lpflOldProtect));
 }
 
-extern "C" NTSYSAPI PVOID RtlFreeSid(PSID Sid);
+extern "C" NTSYSAPI PVOID NTAPI RtlFreeSid(PSID Sid);
 
-extern "C" NTSYSAPI NTSTATUS RtlAllocateAndInitializeSid(
+extern "C" NTSYSAPI NTSTATUS NTAPI RtlAllocateAndInitializeSid(
 	PSID_IDENTIFIER_AUTHORITY IdentifierAuthority,
 	UCHAR                     SubAuthorityCount,
 	ULONG                     SubAuthority0,
@@ -85,6 +85,7 @@ extern "C" NTSYSAPI NTSTATUS RtlAllocateAndInitializeSid(
 extern "C"
 NTSYSAPI
 NTSTATUS
+NTAPI
 RtlAddMandatoryAce(
 	_Inout_ PACL Acl,
 	_In_ ULONG AceRevision,

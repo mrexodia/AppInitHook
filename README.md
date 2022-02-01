@@ -5,7 +5,7 @@ Global user-mode hooking framework, based on [AppInit_DLLs](https://docs.microso
 ## Building & Usage
 
 ```sh
-cmake -B build
+cmake -B build -A x64
 cmake --build build --config Release
 ```
 
