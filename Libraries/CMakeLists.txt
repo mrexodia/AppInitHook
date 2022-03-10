@@ -25,13 +25,13 @@ target_link_directories(ntdll INTERFACE
 	ntdll
 )
 
-if(CMAKE_SIZEOF_VOID_P EQUAL 4)
+if(CMAKE_SIZEOF_VOID_P EQUAL 4) # x86
 	target_link_libraries(ntdll INTERFACE
 		ntdll_x86
 	)
 endif()
 
-if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+if(CMAKE_SIZEOF_VOID_P EQUAL 8) # x64
 	target_link_libraries(ntdll INTERFACE
 		ntdll_x64
 	)
@@ -39,6 +39,7 @@ endif()
 
 unset(CMKR_TARGET)
 unset(CMKR_SOURCES)
+
 # Target MinHook
 set(CMKR_TARGET MinHook)
 set(MinHook_SOURCES "")
@@ -78,6 +79,7 @@ target_include_directories(MinHook PUBLIC
 
 unset(CMKR_TARGET)
 unset(CMKR_SOURCES)
+
 # Target HookDll
 set(CMKR_TARGET HookDll)
 set(HookDll_SOURCES "")
@@ -112,6 +114,7 @@ target_link_libraries(HookDll PUBLIC
 
 unset(CMKR_TARGET)
 unset(CMKR_SOURCES)
+
 # Target AppInitDispatcher
 set(CMKR_TARGET AppInitDispatcher)
 set(AppInitDispatcher_SOURCES "")
@@ -134,6 +137,12 @@ endif()
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${AppInitDispatcher_SOURCES})
 
+if(APPINITHOOK_UNLOAD_DISPATCHER) # unload-dispatcher
+	target_compile_definitions(AppInitDispatcher PUBLIC
+		UNLOAD_DISPATCHER
+	)
+endif()
+
 target_link_libraries(AppInitDispatcher PUBLIC
 	HookDll
 )
@@ -145,3 +154,4 @@ set_target_properties(AppInitDispatcher PROPERTIES
 
 unset(CMKR_TARGET)
 unset(CMKR_SOURCES)
+

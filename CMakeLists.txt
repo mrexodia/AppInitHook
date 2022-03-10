@@ -3,6 +3,10 @@
 
 cmake_minimum_required(VERSION 3.15)
 
+if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
+	message(FATAL_ERROR "In-tree builds are not supported. Run CMake from a separate directory: cmake -B build")
+endif()
+
 # Regenerate CMakeLists.txt automatically in the root project
 set(CMKR_ROOT_PROJECT OFF)
 if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
@@ -23,74 +27,20 @@ if(CMKR_ROOT_PROJECT)
 	configure_file(cmake.toml cmake.toml COPYONLY)
 endif()
 
-# Set up a more familiar Visual Studio configuration
-# Override these options with -DCMAKE_OPTION=Value
-#
-# See: https://cmake.org/cmake/help/latest/command/set.html#set-cache-entry
-set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "")
-set(CMAKE_EXE_LINKER_FLAGS_RELEASE "/DEBUG:FULL /INCREMENTAL:NO" CACHE STRING "")
-set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "/DEBUG:FULL /INCREMENTAL:NO" CACHE STRING "")
-set(CMAKE_BUILD_TYPE "Release" CACHE STRING "")
-set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>" CACHE STRING "")
+# Options
+option(APPINITHOOK_PRIVATE_MODULES "" ON)
+option(APPINITHOOK_UNLOAD_DISPATCHER "" ON)
+
+include("CMake/msvc-static-runtime.cmake")
+include("CMake/msvc-configurations.cmake")
 
 project(AppInitHook
 	VERSION
 		0.1.0
 )
 
-# Check if we're compiling with MSVC
-if(NOT MSVC)
-	message(FATAL_ERROR "Non-MSVC compilers are not supported!")
-endif()
-
-# Fail when trying to compile to a path that contains spaces
-string(FIND "${PROJECT_BINARY_DIR}" " " SPACE_INDEX)
-if(NOT SPACE_INDEX STREQUAL "-1")
-	message(FATAL_ERROR "Compiling in a path that contains spaces is not supported!")
-endif()
-
-# Flatten build hierarchy (see: https://stackoverflow.com/a/51320498/1806760)
-if(CMAKE_CONFIGURATION_TYPES)
-	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>")
-	set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>")
-	set(CMAKE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>")
-	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>")
-else()
-	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
-	set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
-	set(CMAKE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
-	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
-endif()
-
-# Build the register_AppInitDLL to register AppInitDispatcher.dll
-add_custom_target(register_AppInitDLLs
-	COMMAND
-		"${CMAKE_COMMAND}" --build "${PROJECT_BINARY_DIR}" --target AppInitDispatcher --config $<CONFIG>
-    COMMAND
-        "${CMAKE_COMMAND}" "-DAPPINITDISPATCHER_PATH=$<TARGET_FILE:AppInitDispatcher>" -DCMAKE_SIZEOF_VOID_P=${CMAKE_SIZEOF_VOID_P} -P "${CMAKE_CURRENT_SOURCE_DIR}/CMake/register_AppInitDLLs.cmake"
-    SOURCES
-        CMake/register_x64.reg.in
-        CMake/register_x86.reg.in
-)
-
-# Create a skeleton private module
-if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/Private")
-	file(
-		COPY "${CMAKE_CURRENT_SOURCE_DIR}/CMake/cmake.toml"
-		DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/Private"
-	)
-	file(
-		COPY "${CMAKE_CURRENT_SOURCE_DIR}/Modules/AppInitExampleModule/AppInitExampleModule.cpp"
-		DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/Private/MyPrivateModule"
-	)
-	file(RENAME
-		"${CMAKE_CURRENT_SOURCE_DIR}/Private/MyPrivateModule/AppInitExampleModule.cpp"
-		"${CMAKE_CURRENT_SOURCE_DIR}/Private/MyPrivateModule/MyPrivateModule.cpp"
-	)
-endif()
-
-# Options
-option(APPINITHOOK_PRIVATE_MODULES OFF)
+include("CMake/flatten-build-hierarchy.cmake")
+include("CMake/AppInitHook-custom.cmake")
 
 # Libraries
 set(CMKR_CMAKE_FOLDER ${CMAKE_FOLDER})
@@ -113,7 +63,7 @@ add_subdirectory(Modules)
 set(CMAKE_FOLDER ${CMKR_CMAKE_FOLDER})
 
 
-if(APPINITHOOK_PRIVATE_MODULES)
+if(APPINITHOOK_PRIVATE_MODULES) # private
 	# Private
 	set(CMKR_CMAKE_FOLDER ${CMAKE_FOLDER})
 	if(CMAKE_FOLDER)
@@ -155,3 +105,4 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${TestLoader_SOURCES})
 
 unset(CMKR_TARGET)
 unset(CMKR_SOURCES)
+

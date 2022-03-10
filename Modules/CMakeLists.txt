@@ -33,6 +33,7 @@ target_link_libraries(AppInitExampleModule PUBLIC
 
 unset(CMKR_TARGET)
 unset(CMKR_SOURCES)
+
 # Target clang-cl-hacks
 set(CMKR_TARGET clang-cl-hacks)
 set(clang-cl-hacks_SOURCES "")
@@ -60,6 +61,7 @@ target_link_libraries(clang-cl-hacks PUBLIC
 
 unset(CMKR_TARGET)
 unset(CMKR_SOURCES)
+
 # Target CMakeClean
 set(CMKR_TARGET CMakeClean)
 set(CMakeClean_SOURCES "")
@@ -87,6 +89,7 @@ target_link_libraries(CMakeClean PUBLIC
 
 unset(CMKR_TARGET)
 unset(CMKR_SOURCES)
+
 # Target CmdImproved
 set(CMKR_TARGET CmdImproved)
 set(CmdImproved_SOURCES "")
@@ -114,6 +117,7 @@ target_link_libraries(CmdImproved PUBLIC
 
 unset(CMKR_TARGET)
 unset(CMKR_SOURCES)
+
 # Target ConhostLoader
 set(CMKR_TARGET ConhostLoader)
 set(ConhostLoader_SOURCES "")
@@ -141,6 +145,7 @@ target_link_libraries(ConhostLoader PUBLIC
 
 unset(CMKR_TARGET)
 unset(CMKR_SOURCES)
+
 # Target ExitProcess
 set(CMKR_TARGET ExitProcess)
 set(ExitProcess_SOURCES "")
@@ -168,6 +173,7 @@ target_link_libraries(ExitProcess PUBLIC
 
 unset(CMKR_TARGET)
 unset(CMKR_SOURCES)
+
 # Target ForceQuit
 set(CMKR_TARGET ForceQuit)
 set(ForceQuit_SOURCES "")
@@ -195,6 +201,7 @@ target_link_libraries(ForceQuit PUBLIC
 
 unset(CMKR_TARGET)
 unset(CMKR_SOURCES)
+
 # Target GitMagic
 set(CMKR_TARGET GitMagic)
 set(GitMagic_SOURCES "")
@@ -222,6 +229,7 @@ target_link_libraries(GitMagic PUBLIC
 
 unset(CMKR_TARGET)
 unset(CMKR_SOURCES)
+
 # Target HighPriority
 set(CMKR_TARGET HighPriority)
 set(HighPriority_SOURCES "")
@@ -249,6 +257,7 @@ target_link_libraries(HighPriority PUBLIC
 
 unset(CMKR_TARGET)
 unset(CMKR_SOURCES)
+
 # Target NoSoftwareInventory
 set(CMKR_TARGET NoSoftwareInventory)
 set(NoSoftwareInventory_SOURCES "")
@@ -276,6 +285,7 @@ target_link_libraries(NoSoftwareInventory PUBLIC
 
 unset(CMKR_TARGET)
 unset(CMKR_SOURCES)
+
 # Target TotalCommander
 set(CMKR_TARGET TotalCommander)
 set(TotalCommander_SOURCES "")
@@ -303,6 +313,7 @@ target_link_libraries(TotalCommander PUBLIC
 
 unset(CMKR_TARGET)
 unset(CMKR_SOURCES)
+
 # Target WerfaultMagic
 set(CMKR_TARGET WerfaultMagic)
 set(WerfaultMagic_SOURCES "")
@@ -330,6 +341,7 @@ target_link_libraries(WerfaultMagic PUBLIC
 
 unset(CMKR_TARGET)
 unset(CMKR_SOURCES)
+
 # Target WowUndirect
 set(CMKR_TARGET WowUndirect)
 set(WowUndirect_SOURCES "")
@@ -357,3 +369,4 @@ target_link_libraries(WowUndirect PUBLIC
 
 unset(CMKR_TARGET)
 unset(CMKR_SOURCES)
+

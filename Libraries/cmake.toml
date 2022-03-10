@@ -25,3 +25,4 @@ type = "shared"
 sources = ["AppInitDispatcher/*.cpp", "AppInitDispatcher/*.hpp"]
 link-libraries = ["HookDll"]
 properties = { EXCLUDE_FROM_DEFAULT_BUILD = "TRUE" }
+unload-dispatcher.compile-definitions = ["UNLOAD_DISPATCHER"]

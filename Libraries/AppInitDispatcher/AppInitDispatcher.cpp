@@ -126,5 +126,10 @@ BOOL WINAPI DllMain(
 			dlogp("No module to load for this process");
 		}
 	}
+
+#ifdef UNLOAD_DISPATCHER
 	return FALSE;
+#else
+	return TRUE;
+#endif // UNLOAD_DISPATCHER
 }
