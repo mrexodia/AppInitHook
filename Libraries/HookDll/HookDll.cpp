@@ -9,12 +9,12 @@ extern "C" __declspec(dllexport) void inject() { }
 
 void dprintf(const char* format, ...)
 {
-	static char dprintf_msg[66000];
+	char dprintf_msg[2048];
 	va_list args;
 	va_start(args, format);
-	*dprintf_msg = 0;
-	auto len = vsnprintf_s(dprintf_msg, sizeof(dprintf_msg), format, args);
-	for (; len > 1; len--)
+	auto len = vsnprintf(dprintf_msg, sizeof(dprintf_msg), format, args);
+	va_end(args);
+	for (; len > 0; len--)
 	{
 		auto& ch = dprintf_msg[len - 1];
 		if (ch == '\r' || ch == '\n')

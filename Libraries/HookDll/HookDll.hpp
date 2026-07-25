@@ -25,7 +25,7 @@ struct Hook
 #pragma section(".hooks$1",long,read)
 #pragma section(".hooks$2",long,read)
 #pragma section(".hooks$3",long,read)
-#pragma comment(linker, "/merge:hooks=.rdata")
+#pragma comment(linker, "/merge:.hooks=.rdata")
 
 // Can's magic
 __declspec(allocate(".hooks$1")) const Hook hooks_begin;
@@ -52,5 +52,5 @@ static MH_STATUS WINAPI MH_CreateHookApi(const wchar_t* pszModule, const char* p
 	return MH_CreateHookApi(pszModule, pszProcName, pDetour, (LPVOID*)&ppOriginal);
 }
 
-#define dlog() dprintf("[AppInitHook] [%s] [%u] " __FUNCTION__ "\n", modname(), GetCurrentProcessId())
-#define dlogp(fmt, ...) dprintf("[AppInitHook] [%s] [%u] " __FUNCTION__ "(" fmt ")\n", modname(), GetCurrentProcessId(), __VA_ARGS__)
+#define dlog() dprintf("[AppInitHook] [%s] [%u] " __FUNCTION__ "\n", modname(), GetCurrentThreadId())
+#define dlogp(fmt, ...) dprintf("[AppInitHook] [%s] [%u] " __FUNCTION__ "(" fmt ")\n", modname(), GetCurrentThreadId(), __VA_ARGS__)
